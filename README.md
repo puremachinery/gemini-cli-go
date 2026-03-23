@@ -43,6 +43,40 @@ interactive UX, and auth flows are stabilized.
 
 ## Install
 
+### Release binaries (recommended)
+
+Release archives and `SHA256SUMS` are published on
+[`Releases`](https://github.com/puremachinery/gemini-cli-go/releases).
+
+Available assets:
+
+- `gemini-cli-go_<version>_darwin_amd64.tar.gz`
+- `gemini-cli-go_<version>_darwin_arm64.tar.gz`
+- `gemini-cli-go_<version>_linux_amd64.tar.gz`
+- `gemini-cli-go_<version>_linux_arm64.tar.gz`
+- `gemini-cli-go_<version>_windows_amd64.zip`
+
+macOS/Linux example:
+
+```bash
+VERSION=v0.1.0
+ASSET=gemini-cli-go_${VERSION}_darwin_arm64.tar.gz
+curl -LO "https://github.com/puremachinery/gemini-cli-go/releases/download/${VERSION}/${ASSET}"
+tar -xzf "${ASSET}"
+chmod +x gemini-cli
+sudo mv gemini-cli /usr/local/bin/
+```
+
+Verify the download against the matching release `SHA256SUMS` before moving it
+into `PATH`.
+
+Windows:
+
+- Download `gemini-cli-go_<version>_windows_amd64.zip` from the release page.
+- Unzip it and place `gemini-cli.exe` somewhere on your `PATH`.
+
+### Install from source
+
 Prerequisite: Go 1.25.0+
 
 Install directly:
