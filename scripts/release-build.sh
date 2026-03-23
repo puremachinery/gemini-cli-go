@@ -11,6 +11,10 @@ if [[ -z "$VERSION" ]]; then
   exit 1
 fi
 
+if [[ "$OUT_DIR" != /* ]]; then
+  OUT_DIR="$ROOT_DIR/$OUT_DIR"
+fi
+
 cleanup() {
   if [[ -n "$STAGING_ROOT" && -d "$STAGING_ROOT" ]]; then
     rm -rf "$STAGING_ROOT"
@@ -20,13 +24,25 @@ trap cleanup EXIT
 
 STAGING_ROOT="$(mktemp -d "$ROOT_DIR/.release-build.XXXXXX")"
 
+case "$OUT_DIR" in
+  ""|"/"|"$ROOT_DIR")
+    printf 'error: refusing to remove unsafe output directory %q\n' "$OUT_DIR" >&2
+    exit 1
+    ;;
+  "$ROOT_DIR"/*)
+    ;;
+  *)
+    printf 'error: output directory must stay under %s (got %s)\n' "$ROOT_DIR" "$OUT_DIR" >&2
+    exit 1
+    ;;
+esac
+
 rm -rf "$OUT_DIR"
 mkdir -p "$OUT_DIR"
 
 build_target() {
   local goos="$1"
   local goarch="$2"
-  local ext=""
   local archive_ext="tar.gz"
   local binary_name="gemini-cli"
   local archive_name="gemini-cli-go_${VERSION}_${goos}_${goarch}"
@@ -34,7 +50,6 @@ build_target() {
   local archive_path
 
   if [[ "$goos" == "windows" ]]; then
-    ext=".exe"
     archive_ext="zip"
     binary_name="gemini-cli.exe"
   fi
@@ -75,8 +90,17 @@ build_target linux amd64
 build_target linux arm64
 build_target windows amd64
 
-: >"$OUT_DIR/SHA256SUMS"
-for asset in "$OUT_DIR"/gemini-cli-go_*; do
-  checksum="$(shasum -a 256 "$asset" | awk '{print $1}')"
-  printf '%s  %s\n' "$checksum" "$(basename "$asset")" >>"$OUT_DIR/SHA256SUMS"
-done
+if command -v sha256sum >/dev/null 2>&1; then
+  (
+    cd "$OUT_DIR"
+    sha256sum gemini-cli-go_* > SHA256SUMS
+  )
+elif command -v shasum >/dev/null 2>&1; then
+  (
+    cd "$OUT_DIR"
+    shasum -a 256 gemini-cli-go_* > SHA256SUMS
+  )
+else
+  printf 'error: neither sha256sum nor shasum is available\n' >&2
+  exit 1
+fi
