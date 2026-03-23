@@ -1,0 +1,37 @@
+#!/bin/sh
+set -e
+
+SUPPORTED_GO_VERSION_PATTERN="go1.25*"
+PINNED_GO_TOOLCHAIN="go1.25.0"
+
+files=$(git diff --cached --name-only --diff-filter=ACM | grep '\.go$' || true)
+if [ -n "$files" ]; then
+  gofmt -w $files
+  git add $files
+fi
+
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks protect --staged --redact --no-banner --config .gitleaks.toml
+else
+  echo "gitleaks not found; skipping secret scan (install: brew install gitleaks or go install github.com/gitleaks/gitleaks/v8@latest)"
+fi
+
+if command -v golangci-lint >/dev/null 2>&1; then
+  if ! command -v go >/dev/null 2>&1; then
+    echo "go command not found; skipping golangci-lint (Go-based checks in this hook require the 'go' command)"
+  else
+    goversion=$(go env GOVERSION || true)
+    case "$goversion" in
+      $SUPPORTED_GO_VERSION_PATTERN)
+        golangci-lint run --timeout=5m
+        ;;
+      *)
+        echo "skipping golangci-lint in pre-commit under ${goversion:-unknown Go version}; run 'env GOTOOLCHAIN=$PINNED_GO_TOOLCHAIN golangci-lint run --timeout=5m' manually"
+        ;;
+    esac
+  fi
+else
+  echo "golangci-lint not found; skipping lint (install with: go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest)"
+fi
+
+go test ./...

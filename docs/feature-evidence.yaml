@@ -1,0 +1,251 @@
+# Evidence for verified feature statuses (done/partial/missing).
+# Keep this focused on audited entries in docs/feature-status.yaml.
+
+version: "1.0"
+updated_at: "2026-02-02"
+
+features:
+  # Authentication
+  - feature: "OAuth browser login"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/auth/google.go (Login with browser redirect + callback server)"
+  - feature: "Token persistence"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/auth/filestore.go (Save/Load/Clear credentials)"
+      - "internal/auth/tokenfile.go (schema + encoding)"
+  - feature: "Token refresh"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/auth/google.go (Refresh uses refresh token)"
+      - "internal/client/auth.go (refresh on authenticated requests)"
+  - feature: "Account email caching"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/auth/accounts.go (cache + load active account)"
+  - feature: "API key auth"
+    status: "verified_done"
+    runtime_wiring:
+      - "cmd/gemini-cli/run.go (GEMINI_API_KEY branch)"
+      - "internal/client/gemini.go (API key auth mechanism)"
+  - feature: "NO_BROWSER flow"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/auth/google.go (isNoBrowser + loginWithUserCode user-code flow)"
+    notes:
+      - "Uses manual device code with PKCE when NO_BROWSER=true."
+
+  # Client
+  - feature: "Streaming chat"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/client/codeassist.go (ChatStream)"
+      - "internal/client/stream.go (SSE stream wrapper)"
+  - feature: "Non-streaming chat"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/client/codeassist.go (Chat)"
+  - feature: "Token counting"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/client/codeassist.go (CountTokens)"
+  - feature: "Gemini API client"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/client/gemini.go (Gemini API Chat/ChatStream)"
+  - feature: "OAuth middleware"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/client/oauth_transport.go (injects auth headers)"
+
+  # Configuration
+  - feature: "Comment-tolerant JSON"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/config/commentjson.go (parse + write with comments)"
+  - feature: "Hierarchical settings"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/config/loader.go (system/global/workspace merge)"
+  - feature: "Dotted-path access"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/config/settings.go (Get/Set/Delete by dotted path)"
+  - feature: "Model resolution"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/config/models.go (alias resolution)"
+  - feature: "Preview features flag"
+    status: "verified_done"
+    runtime_wiring:
+      - "cmd/gemini-cli/runtime_config.go (general.previewFeatures wiring)"
+      - "internal/config/models.go (preview model gating)"
+
+  # Tools
+  - feature: "run_shell_command"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/tools/shell.go (shell tool implementation)"
+  - feature: "read_file"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/tools/read_file.go (offset/limit read)"
+  - feature: "read_many_files"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/tools/read_many_files.go (glob + gitignore)"
+  - feature: "write_file"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/tools/write_file.go (atomic write)"
+  - feature: "replace"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/tools/replace.go (exact string replacement)"
+  - feature: "google_web_search"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/tools/web_search.go (tool implementation)"
+      - "internal/tools/registry.go (registered only with Gemini API client)"
+    notes:
+      - "Requires GEMINI_API_KEY auth."
+  - feature: "web_fetch"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/tools/web_fetch.go (tool implementation)"
+      - "internal/tools/registry.go (registered only with Gemini API client)"
+    notes:
+      - "Requires GEMINI_API_KEY auth; prompts for approval in interactive mode."
+  - feature: "Tool registry"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/tools/registry.go (register/lookup/declarations)"
+  - feature: "Tool executor"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/tools/executor.go (execute tool calls + approvals)"
+  - feature: "Approval modes"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/tools/approval.go (approver implementations)"
+      - "internal/tools/approval_mode.go (mode normalization)"
+
+  # Interactive UI
+  - feature: "REPL loop"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/ui/runner.go (interactive loop)"
+  - feature: "Agentic tool loop"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/ui/model_loop.go (tool call/response loop)"
+  - feature: "Intro banner"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/ui/runner.go (introText)"
+  - feature: "Readline input"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/ui/input.go (readline line reader)"
+  - feature: "Markdown rendering"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/ui/markdown.go (glamour renderer)"
+  - feature: "Tool approval prompts"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/ui/approver.go (prompt approver)"
+  - feature: "Ctrl+C handling"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/ui/runner.go (interrupt cancel + quit)"
+  - feature: "Headless mode"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/ui/headless.go (single prompt execution)"
+
+  # Slash Commands
+  - feature: "/help"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/ui/commands.go (help handler)"
+  - feature: "/clear"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/ui/commands.go (clear handler)"
+  - feature: "/quit, /exit"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/ui/commands.go (quit handler)"
+  - feature: "/model"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/ui/commands.go (model handler)"
+      - "cmd/gemini-cli/settings_state.go (persist selection)"
+  - feature: "/chat"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/ui/chat_command.go (chat commands)"
+  - feature: "/memory"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/ui/memory_command.go (memory commands)"
+  - feature: "/resume"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/ui/resume_command.go (resume commands)"
+
+  # @ and ! Commands
+  - feature: "@path inclusion"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/ui/at_command.go (@path expansion)"
+
+  # Session & Memory
+  - feature: "Session persistence"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/ui/auto_session.go (auto-save loop)"
+      - "internal/session/file_store.go (store persistence)"
+  - feature: "Session file store"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/session/file_store.go (file-backed store)"
+  - feature: "GEMINI.md loading"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/memory/memory.go (hierarchical memory loading)"
+  - feature: "/memory commands"
+    status: "verified_done"
+    runtime_wiring:
+      - "internal/ui/memory_command.go (show/list/add/refresh)"
+
+  # CLI Entrypoint
+  - feature: "Interactive mode"
+    status: "verified_done"
+    runtime_wiring:
+      - "cmd/gemini-cli/main.go (argument dispatch)"
+      - "cmd/gemini-cli/run.go (interactive run wiring)"
+  - feature: "Headless mode"
+    status: "verified_done"
+    runtime_wiring:
+      - "cmd/gemini-cli/main.go (--prompt/stdin handling)"
+      - "cmd/gemini-cli/run.go (headless run wiring)"
+  - feature: "Positional prompt"
+    status: "verified_done"
+    runtime_wiring:
+      - "cmd/gemini-cli/main.go (positional prompt handling)"
+  - feature: "Auth subcommands"
+    status: "verified_done"
+    runtime_wiring:
+      - "cmd/gemini-cli/auth_flow.go (login/logout)"
+  - feature: "Approval mode flags"
+    status: "verified_done"
+    runtime_wiring:
+      - "cmd/gemini-cli/main.go (flags)"
+      - "cmd/gemini-cli/runtime_config.go (approval mode resolution)"
+  - feature: "Model persistence"
+    status: "verified_done"
+    runtime_wiring:
+      - "cmd/gemini-cli/settings_state.go (global settings write)"

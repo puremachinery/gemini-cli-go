@@ -1,0 +1,10 @@
+# Default ownership for the repository.
+* @puremachinery
+
+# Security, auth, and CI surfaces.
+SECURITY.md @puremachinery
+PRIVACY.md @puremachinery
+.github/workflows/* @puremachinery
+internal/auth/* @puremachinery
+internal/client/* @puremachinery
+cmd/gemini-cli/* @puremachinery

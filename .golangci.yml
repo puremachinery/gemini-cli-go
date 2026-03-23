@@ -1,0 +1,19 @@
+version: "2"
+linters:
+  default: none
+  enable:
+    - govet
+    - staticcheck
+    - errcheck
+    - ineffassign
+    - unused
+    - revive
+    - gocritic
+  settings:
+    errcheck:
+      check-type-assertions: true
+      check-blank: true
+    revive:
+      rules:
+        - name: var-naming
+          disabled: true

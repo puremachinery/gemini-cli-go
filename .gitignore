@@ -1,0 +1,34 @@
+# Binaries
+/bin/
+/dist/
+/gemini-cli
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Build/test artifacts
+*.test
+*.out
+
+# Go workspace
+/go.work
+/go.work.sum
+
+# Editor/OS
+.DS_Store
+
+# Upstream reference
+/.upstream/
+
+# Local working docs
+/docs/RELEASE_CHECKLIST.md
+/.local/
+
+# AI Review System
+.review_state.yaml
+.review_history/
+
+# Local agent instructions
+AGENTS.md

@@ -1,0 +1,53 @@
+name: Bug report
+description: Report a reproducible bug or regression.
+title: "bug: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug report. Please include a minimal reproduction.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What happened and what did you expect?
+      placeholder: Short description of the issue.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: Include exact commands/input when possible.
+      placeholder: |
+        1. Run ...
+        2. Set ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs and screenshots
+      description: Paste error output, stack traces, or screenshots.
+      render: shell
+  - type: input
+    id: version
+    attributes:
+      label: gemini-cli-go version
+      description: Output of `gemini-cli --version`
+      placeholder: v0.x.x
+  - type: input
+    id: go_version
+    attributes:
+      label: Go version
+      description: Output of `go version`
+      placeholder: go version go1.25.0 darwin/arm64
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      description: Operating system and architecture.
+      placeholder: macOS 15.0 arm64

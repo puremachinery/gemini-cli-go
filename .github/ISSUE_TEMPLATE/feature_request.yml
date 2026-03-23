@@ -1,0 +1,32 @@
+name: Feature request
+description: Propose a new capability or UX improvement.
+title: "feature: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What pain point are you trying to solve?
+      placeholder: I cannot ...
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the behavior or API you want.
+      placeholder: Add a flag/command/tool that ...
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any workarounds or other approaches?
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Upstream parity links, mockups, or references.

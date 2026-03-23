@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+
+go vet ./...
+
+if [ "${RUN_RACE:-}" = "1" ]; then
+  go test -race ./...
+fi

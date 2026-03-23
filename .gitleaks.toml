@@ -1,0 +1,6 @@
+title = "gitleaks config"
+
+[allowlist]
+description = "Public OAuth client secret mirrored from upstream gemini-cli."
+paths = ["internal/auth/google.go"]
+regexes = ["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"]

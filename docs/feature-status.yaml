@@ -1,0 +1,115 @@
+# Feature status inventory for gemini-cli-go.
+# Single-marker status scheme.
+version: "1.0"
+source: "single-marker verification scheme"
+
+status_legend:
+  "[ ]": "Not sure - believed done, not yet verified"
+  "[~]": "Partial - incomplete or missing behavior"
+  "[s]": "Stub - placeholder response only"
+  "[-]": "Verified missing - confirmed absent"
+  "[x]": "Verified done - confirmed working"
+
+feature_inventory_markdown: |
+  ## Feature Inventory
+
+  Comprehensive list of every feature in the system, grouped by module.
+  Markers follow the status_legend.
+
+  ### Authentication (`internal/auth/`)
+
+  - [x] **OAuth browser login** - Google OAuth2 with browser redirect (`google.go`)
+  - [x] **Token persistence** - Save/load/clear credentials to file (`filestore.go`)
+  - [x] **Token refresh** - Automatic token refresh on expiry (`google.go`)
+  - [x] **Account email caching** - Cache active account email (`accounts.go`)
+  - [x] **API key auth** - GEMINI_API_KEY env var support (`cmd/gemini-cli/run.go`)
+  - [-] **Vertex AI auth** - ADC/service account not yet implemented
+  - [x] **NO_BROWSER flow** - Headless OAuth via manual code (`google.go`)
+  - [-] **Auth selection UI** - /auth command not yet implemented
+
+  ### Client (`internal/client/`)
+
+  - [x] **Streaming chat** - SSE-based streaming via Code Assist API (`codeassist.go`)
+  - [x] **Non-streaming chat** - Batch request/response (`codeassist.go`)
+  - [x] **Token counting** - CountTokens API (`codeassist.go`)
+  - [x] **Gemini API client** - Direct Gemini API with API key (`gemini.go`)
+  - [x] **OAuth middleware** - Transparent auth header injection (`oauth_transport.go`)
+
+  ### Configuration (`internal/config/`)
+
+  - [x] **Comment-tolerant JSON** - Read/write JSON with comments via hujson (`commentjson.go`)
+  - [x] **Hierarchical settings** - System/global/workspace merge (`loader.go`)
+  - [x] **Dotted-path access** - Get/set nested values by path (`settings.go`)
+  - [x] **Model resolution** - Alias mapping (auto/pro/flash/flash-lite) (`models.go`)
+  - [x] **Preview features flag** - Gates preview model access (`models.go`)
+
+  ### Tools (`internal/tools/`)
+
+  - [x] **run_shell_command** - Shell execution with working directory (`shell.go`)
+  - [x] **read_file** - File reading with line offset/limit (`read_file.go`)
+  - [x] **read_many_files** - Multi-file read with glob matching (`read_many_files.go`)
+  - [x] **write_file** - File writing with directory creation (`write_file.go`)
+  - [x] **replace** - Exact string replacement in files (`replace.go`)
+  - [x] **google_web_search** - Web search via Gemini grounding (API key auth only) (`web_search.go`)
+  - [x] **web_fetch** - URL content fetching (API key auth only) (`web_fetch.go`)
+  - [x] **Tool registry** - Registration, lookup, declarations (`registry.go`)
+  - [x] **Tool executor** - Execute with approval flow (`executor.go`)
+  - [x] **Approval modes** - default/auto_edit/yolo/plan (`approval.go`)
+  - [-] **save_memory tool** - Not yet implemented
+  - [-] **write_todos tool** - Not yet implemented
+  - [-] **edit tool** - Line-by-line editing not yet implemented
+  - [-] **MCP integration** - Not yet implemented
+
+  ### Interactive UI (`internal/ui/`)
+
+  - [x] **REPL loop** - Read/eval/stream/print cycle (`runner.go`)
+  - [x] **Agentic tool loop** - FunctionCall parse/execute/return/continue (`runner.go`)
+  - [x] **Intro banner** - ASCII art and tips (`runner.go`)
+  - [x] **Readline input** - History, multiline (Ctrl+J), paste handling (`input.go`)
+  - [x] **Markdown rendering** - Syntax-highlighted output via glamour (`markdown.go`)
+  - [x] **Tool approval prompts** - y/n confirmation in interactive mode (`approver.go`)
+  - [x] **Ctrl+C handling** - Mid-stream cancel returns to prompt (`runner.go`)
+  - [x] **Headless mode** - Single prompt, stream output, exit (`headless.go`)
+  - [-] **Vim mode** - Not yet implemented
+  - [-] **Themes** - Not yet implemented
+  - [-] **Status indicators** - Shell mode, approval mode display not yet implemented
+
+  ### Slash Commands (`internal/ui/`)
+
+  - [x] **/help** - Show available commands (`commands.go`)
+  - [x] **/clear** - Clear screen and reset conversation (`commands.go`)
+  - [x] **/quit, /exit** - Exit gracefully (`commands.go`)
+  - [x] **/model** - Show or switch active model, persisted globally (`commands.go`)
+  - [x] **/chat** - Save/list/resume/delete/share conversations (`chat_command.go`)
+  - [x] **/memory** - Show/list/refresh/add GEMINI.md context (`memory_command.go`)
+  - [x] **/resume** - Browse and resume auto-saved sessions (`resume_command.go`)
+  - [-] **/about** - Not yet implemented
+  - [-] **/auth** - Not yet implemented
+  - [-] **/compress** - Not yet implemented
+  - [-] **/settings** - Not yet implemented
+  - [-] **/vim** - Not yet implemented
+
+  ### @ and ! Commands (`internal/ui/`)
+
+  - [x] **@path inclusion** - File/dir context with .gitignore awareness (`at_command.go`)
+  - [-] **! shell mode** - Not yet implemented
+
+  ### Session & Memory (`internal/session/`, `internal/memory/`)
+
+  - [x] **Session persistence** - Auto-save conversations (`auto_session.go`)
+  - [x] **Session file store** - File-based session storage (`filestore.go`)
+  - [x] **GEMINI.md loading** - Hierarchical memory file loading (`memory.go`)
+  - [x] **/memory commands** - Add/list/show/refresh memory (`memory.go`)
+  - [-] **Checkpointing** - Pre-edit snapshots not yet implemented
+  - [-] **/restore** - Not yet implemented
+  - [-] **/rewind** - Not yet implemented
+
+  ### CLI Entrypoint (`cmd/gemini-cli/`)
+
+  - [x] **Interactive mode** - Default with no args (`main.go`, `run.go`)
+  - [x] **Headless mode** - --prompt flag and stdin pipe (`main.go`, `run.go`)
+  - [x] **Positional prompt** - Opens interactive with initial message (`main.go`)
+  - [x] **Auth subcommands** - login/logout (`auth_flow.go`)
+  - [x] **Approval mode flags** - --approval-mode, --yolo (`main.go`, `runtime_config.go`)
+  - [x] **Model persistence** - /model writes to global settings (`settings_state.go`)
+  - [-] **Output format flags** - --json, --streaming-json not yet implemented
