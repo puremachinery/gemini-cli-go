@@ -1,0 +1,49 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - name: Set up Go
+        uses: actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417
+        with:
+          go-version-file: go.mod
+          cache: true
+      - name: Build release artifacts
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: ./scripts/release-build.sh "$VERSION"
+      - name: Verify linux amd64 binary version
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          workdir="$(mktemp -d)"
+          trap 'rm -rf "$workdir"' EXIT
+          tar -xzf "dist/gemini-cli-go_${VERSION}_linux_amd64.tar.gz" -C "$workdir"
+          test "$("$workdir/gemini-cli" --version)" = "$VERSION"
+      - name: Write release notes
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          {
+            printf 'Initial public MVP release of gemini-cli-go.\n\n'
+            printf 'This is an unofficial Go-based subset of google-gemini/gemini-cli.\n\n'
+            printf 'Release assets:\n'
+            find dist -maxdepth 1 -type f -exec basename '{}' ';' | sort | sed 's/^/- /'
+          } > release-notes.md
+      - name: Publish GitHub release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ github.ref_name }}
+        run: gh release create "$VERSION" dist/* --title "$VERSION" --notes-file release-notes.md --verify-tag
