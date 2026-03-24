@@ -11,6 +11,11 @@ if [[ -z "$VERSION" ]]; then
   exit 1
 fi
 
+if [[ ! "$VERSION" =~ ^v[0-9A-Za-z._-]+$ || "$VERSION" == *..* ]]; then
+  printf 'error: version must match v[0-9A-Za-z._-]+ without ".." (%s)\n' "$VERSION" >&2
+  exit 1
+fi
+
 if [[ "$OUT_DIR" != /* ]]; then
   OUT_DIR="$ROOT_DIR/$OUT_DIR"
 fi
@@ -22,8 +27,31 @@ case "$OUT_DIR" in
     ;;
 esac
 
-mkdir -p "$(dirname "$OUT_DIR")"
-OUT_DIR="$(cd "$(dirname "$OUT_DIR")" && pwd -P)/$(basename "$OUT_DIR")"
+if [[ "$OUT_DIR" == "$ROOT_DIR"/* ]]; then
+  canonical_out_dir="$ROOT_DIR"
+  relative_out_dir="${OUT_DIR#$ROOT_DIR/}"
+  IFS='/' read -r -a out_dir_parts <<< "$relative_out_dir"
+  for part in "${out_dir_parts[@]}"; do
+    case "$part" in
+      ""|"."|"..")
+        printf 'error: output directory contains an invalid path component (%s)\n' "$OUT_DIR" >&2
+        exit 1
+        ;;
+    esac
+
+    next_path="$canonical_out_dir/$part"
+    if [[ -e "$next_path" ]]; then
+      if [[ ! -d "$next_path" ]]; then
+        printf 'error: output directory path contains a non-directory component (%s)\n' "$next_path" >&2
+        exit 1
+      fi
+      canonical_out_dir="$(cd "$next_path" && pwd -P)"
+    else
+      canonical_out_dir="$next_path"
+    fi
+  done
+  OUT_DIR="$canonical_out_dir"
+fi
 
 cleanup() {
   if [[ -n "$STAGING_ROOT" && -d "$STAGING_ROOT" ]]; then
