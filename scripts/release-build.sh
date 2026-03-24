@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 OUT_DIR="${2:-$ROOT_DIR/dist}"
 VERSION="${1:-}"
 STAGING_ROOT=""
@@ -14,6 +14,16 @@ fi
 if [[ "$OUT_DIR" != /* ]]; then
   OUT_DIR="$ROOT_DIR/$OUT_DIR"
 fi
+
+case "$OUT_DIR" in
+  ..|../*|*/..|*/../*)
+    printf 'error: output directory must not contain parent directory traversal (%s)\n' "$OUT_DIR" >&2
+    exit 1
+    ;;
+esac
+
+mkdir -p "$(dirname "$OUT_DIR")"
+OUT_DIR="$(cd "$(dirname "$OUT_DIR")" && pwd -P)/$(basename "$OUT_DIR")"
 
 cleanup() {
   if [[ -n "$STAGING_ROOT" && -d "$STAGING_ROOT" ]]; then
