@@ -18,6 +18,11 @@ func TestString(t *testing.T) {
 			version: "v0.1.0",
 			want:    "v0.1.0",
 		},
+		{
+			name:    "returns default dev version",
+			version: "dev",
+			want:    "dev",
+		},
 	}
 
 	for _, tt := range tests {
