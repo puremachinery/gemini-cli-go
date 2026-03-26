@@ -236,10 +236,10 @@ features:
     status: "verified_done"
     runtime_wiring:
       - "cmd/gemini-cli/main.go (positional prompt handling)"
-  - feature: "Auth subcommands"
+  - feature: "Startup auth prompts"
     status: "verified_done"
     runtime_wiring:
-      - "cmd/gemini-cli/auth_flow.go (login/logout)"
+      - "cmd/gemini-cli/auth_runtime.go (interactive auth selection at launch)"
   - feature: "Approval mode flags"
     status: "verified_done"
     runtime_wiring:
