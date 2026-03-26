@@ -12,6 +12,14 @@ This repo is not an official Google project. It intentionally ships a smaller,
 still-evolving subset of `google-gemini/gemini-cli` while the core loop,
 interactive UX, and auth flows are stabilized.
 
+## Why Go
+
+- Native release binaries with no Node.js, npm, or npx requirement.
+- Straightforward install and distribution for terminal-first environments.
+- Cross-platform builds from a single Go codebase.
+- Familiar tooling for Go-centric teams and infrastructure.
+- Intentionally smaller scope while upstream parity work is still in progress.
+
 ## Feature summary
 
 - Interactive prompt with streaming responses (raw output mode).
@@ -32,6 +40,21 @@ interactive UX, and auth flows are stabilized.
 - `/chat` checkpoints (save/list/resume/delete/share).
 - `/memory` command to show/list/refresh/add GEMINI.md context.
 - `/auth` command in the interactive UI for sign-in/sign-out.
+
+## Parity snapshot
+
+| Capability | Status here | Notes relative to upstream |
+| --- | --- | --- |
+| Interactive chat | Supported | Core REPL loop, streaming responses, tool execution, and prompt editing are implemented. |
+| Headless prompt mode | Partial | `--prompt` and piped stdin work; structured output flags are not implemented yet. |
+| Google OAuth | Supported | Usable today, but the current default client is a temporary public-preview compatibility setup. |
+| API key auth | Supported | Stable fallback; `google_web_search` and `web_fetch` currently require API key auth. |
+| Built-in tools | Partial | `read_file`, `read_many_files`, `write_file`, `replace`, `run_shell_command`, `google_web_search`, and `web_fetch` are implemented; line-oriented `edit` is not. |
+| Slash commands | Partial | `/help`, `/clear`, `/quit`, `/model`, `/chat`, `/resume`, `/memory`, and `/auth` are implemented; `/about`, `/settings`, `/compress`, and `/vim` are not. |
+| MCP and extensions | Missing | Not implemented yet. |
+| Output format flags | Missing | No `--json` or `--streaming-json` support yet. |
+| Themes and Vim mode | Missing | Not implemented yet. |
+| Checkpoint restore / rewind | Missing | `/restore` and `/rewind` are not implemented yet. |
 
 ## Roadmap / known gaps
 
