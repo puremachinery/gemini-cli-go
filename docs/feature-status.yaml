@@ -25,7 +25,7 @@ feature_inventory_markdown: |
   - [x] **API key auth** - GEMINI_API_KEY env var support (`cmd/gemini-cli/run.go`)
   - [-] **Vertex AI auth** - ADC/service account not yet implemented
   - [x] **NO_BROWSER flow** - Headless OAuth via manual code (`google.go`)
-  - [-] **Auth selection UI** - /auth command not yet implemented
+  - [x] **Auth selection UI** - /auth interactive sign-in/sign-out (`ui/auth_command.go`)
 
   ### Client (`internal/client/`)
 
@@ -84,7 +84,7 @@ feature_inventory_markdown: |
   - [x] **/memory** - Show/list/refresh/add GEMINI.md context (`memory_command.go`)
   - [x] **/resume** - Browse and resume auto-saved sessions (`resume_command.go`)
   - [-] **/about** - Not yet implemented
-  - [-] **/auth** - Not yet implemented
+  - [x] **/auth** - Interactive sign-in/sign-out (`auth_command.go`)
   - [-] **/compress** - Not yet implemented
   - [-] **/settings** - Not yet implemented
   - [-] **/vim** - Not yet implemented
@@ -109,7 +109,7 @@ feature_inventory_markdown: |
   - [x] **Interactive mode** - Default with no args (`main.go`, `run.go`)
   - [x] **Headless mode** - --prompt flag and stdin pipe (`main.go`, `run.go`)
   - [x] **Positional prompt** - Opens interactive with initial message (`main.go`)
-  - [x] **Auth subcommands** - login/logout (`auth_flow.go`)
+  - [x] **Startup auth prompts** - Interactive auth selection at launch (`auth_runtime.go`)
   - [x] **Approval mode flags** - --approval-mode, --yolo (`main.go`, `runtime_config.go`)
   - [x] **Model persistence** - /model writes to global settings (`settings_state.go`)
   - [-] **Output format flags** - --json, --streaming-json not yet implemented
