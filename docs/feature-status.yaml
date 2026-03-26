@@ -25,7 +25,7 @@ feature_inventory_markdown: |
   - [x] **API key auth** - GEMINI_API_KEY env var support (`cmd/gemini-cli/run.go`)
   - [-] **Vertex AI auth** - ADC/service account not yet implemented
   - [x] **NO_BROWSER flow** - Headless OAuth via manual code (`google.go`)
-  - [x] **Auth selection UI** - /auth interactive sign-in/sign-out (`ui/auth_command.go`)
+  - [x] **Auth selection UI** - /auth interactive sign-in/sign-out (`internal/ui/auth_command.go`)
 
   ### Client (`internal/client/`)
 
