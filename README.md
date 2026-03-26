@@ -18,7 +18,6 @@ interactive UX, and auth flows are stabilized.
 - Straightforward install and distribution for terminal-first environments.
 - Cross-platform builds from a single Go codebase.
 - Familiar tooling for Go-centric teams and infrastructure.
-- Intentionally smaller scope while upstream parity work is still in progress.
 
 ## Feature summary
 
