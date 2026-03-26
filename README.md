@@ -42,6 +42,8 @@ interactive UX, and auth flows are stabilized.
 
 ## Parity snapshot
 
+Detailed matrix: [`docs/upstream-parity.md`](docs/upstream-parity.md)
+
 | Capability | Status here | Notes relative to upstream |
 | --- | --- | --- |
 | Interactive chat | Supported | Core REPL loop, streaming responses, tool execution, and prompt editing are implemented. |
@@ -54,6 +56,9 @@ interactive UX, and auth flows are stabilized.
 | Output format flags | Missing | No `--json` or `--streaming-json` support yet. |
 | Themes and Vim mode | Missing | Not implemented yet. |
 | Checkpoint restore / rewind | Missing | `/restore` and `/rewind` are not implemented yet. |
+
+This table is the short version. For feature-by-feature parity against a pinned
+upstream baseline, see [`docs/upstream-parity.md`](docs/upstream-parity.md).
 
 ## Roadmap / known gaps
 
