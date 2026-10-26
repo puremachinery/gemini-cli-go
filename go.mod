@@ -1,6 +1,6 @@
 module github.com/puremachinery/gemini-cli-go
 
-go 1.26.0
+go 1.26.10
 
 require (
 	github.com/charmbracelet/glamour v1.0.0
